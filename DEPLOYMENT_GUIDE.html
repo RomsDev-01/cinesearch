@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineSearch — Setup & Deployment Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #111118;
+    --bg-elevated: #16161f;
+    --border: rgba(255,255,255,0.08);
+    --accent: #e8c547;
+    --accent-dim: rgba(232,197,71,0.12);
+    --text-primary: #f0eee8;
+    --text-secondary: #8a8890;
+    --text-muted: #4a4858;
+    --green: #44c87a;
+    --red: #e85444;
+    --blue: #4488e8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── HERO ─────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #0a0a0f 0%, #12101a 50%, #0a0f12 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(232,197,71,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .hero-logo span { color: var(--text-secondary); }
+  .hero-tagline {
+    font-size: 1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+  .hero-badges {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .badge-blue { background: rgba(68,136,232,0.15); border: 1px solid rgba(68,136,232,0.25); color: #4488e8; }
+  .badge-green { background: rgba(68,200,122,0.12); border: 1px solid rgba(68,200,122,0.2); color: #44c87a; }
+  .badge-accent { background: var(--accent-dim); border: 1px solid rgba(232,197,71,0.2); color: var(--accent); }
+  .badge-muted { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); }
+
+  /* ─── LAYOUT ─────────────────────────────────────────────── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  /* ─── STEPS ─────────────────────────────────────────────── */
+  .step-section {
+    margin-bottom: 4rem;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    color: var(--bg);
+    background: var(--accent);
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+  }
+  .step-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 0.1rem;
+  }
+
+  /* ─── CONTENT ─────────────────────────────────────────────── */
+  p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 1.5rem 0 0.6rem;
+  }
+  h3:first-child { margin-top: 0; }
+
+  /* ─── CODE ─────────────────────────────────────────────── */
+  pre {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    margin: 0.75rem 0 1.25rem;
+    position: relative;
+  }
+  pre::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 0.6rem;
+    right: 0.75rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+  }
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+  }
+  .comment { color: var(--text-muted); }
+  .key { color: #4488e8; }
+  .val { color: #44c87a; }
+  .accent-code { color: var(--accent); }
+  .str { color: #e87844; }
+  .cmd { color: var(--accent); }
+  code.inline {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+    font-size: 0.8em;
+    color: var(--accent);
+  }
+
+  /* ─── CARDS ─────────────────────────────────────────────── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  .card-accent {
+    border-color: rgba(232,197,71,0.2);
+    background: linear-gradient(135deg, var(--bg-card), rgba(232,197,71,0.03));
+  }
+  .card-green {
+    border-color: rgba(68,200,122,0.2);
+    background: rgba(68,200,122,0.04);
+  }
+  .card-red {
+    border-color: rgba(232,84,68,0.2);
+    background: rgba(232,84,68,0.04);
+  }
+  .card-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card-title.green { color: var(--green); }
+  .card-title.accent { color: var(--accent); }
+  .card-title.red { color: var(--red); }
+
+  /* ─── CHECKLIST ─────────────────────────────────────────── */
+  .checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+  }
+  .check {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1.5px solid var(--text-muted);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .check.done {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+    font-size: 10px;
+  }
+
+  /* ─── FILE TREE ─────────────────────────────────────────── */
+  .tree {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 2;
+    margin: 0.75rem 0 1.25rem;
+  }
+  .tree-dir { color: var(--blue); }
+  .tree-file { color: var(--text-secondary); }
+  .tree-comment { color: var(--text-muted); }
+  .tree-accent { color: var(--accent); }
+
+  /* ─── FEATURE TABLE ─────────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 1.25rem;
+    font-size: 0.84rem;
+  }
+  th {
+    text-align: left;
+    padding: 0.6rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  .td-feature { color: var(--text-primary); font-weight: 400; }
+
+  /* ─── DIVIDER ─────────────────────────────────────────────── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  /* ─── LINK ─────────────────────────────────────────────── */
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { opacity: 0.8; }
+
+  /* ─── NOTICE ─────────────────────────────────────────────── */
+  .notice {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    margin: 0.75rem 0;
+    font-size: 0.85rem;
+  }
+  .notice-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+  .notice-info { background: rgba(68,136,232,0.08); border: 1px solid rgba(68,136,232,0.2); color: #7ab4f0; }
+  .notice-warn { background: rgba(232,197,71,0.08); border: 1px solid rgba(232,197,71,0.2); color: #d4b53e; }
+  .notice-success { background: rgba(68,200,122,0.08); border: 1px solid rgba(68,200,122,0.2); color: #5dcf8a; }
+</style>
+</head>
+<body>
+
+<!-- ─── HERO ────────────────────────────────────────────────── -->
+<div class="hero">
+  <span class="hero-logo">CINE<span>SEARCH</span></span>
+  <p class="hero-tagline">Setup & Deployment Guide</p>
+  <div class="hero-badges">
+    <span class="badge badge-blue">React 18</span>
+    <span class="badge badge-blue">React Router v6</span>
+    <span class="badge badge-muted">Styled Components</span>
+    <span class="badge badge-accent">TMDB API</span>
+    <span class="badge badge-green">Vercel Deploy</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ─── OVERVIEW ──────────────────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div style="width:36px;height:36px;border-radius:4px;background:var(--bg-elevated);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🎬</div>
+      <div>
+        <div class="step-title" style="font-size:1.3rem;">What You're Building</div>
+        <div class="step-sub">Feature overview</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Description</th><th>Route</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-feature">Hero Banner</td><td>Auto-rotating trending films with backdrop imagery</td><td><code class="inline">/</code></td></tr>
+        <tr><td class="td-feature">Movie Details</td><td>Full page — cast, trailer link, budget, similar films</td><td><code class="inline">/movie/:id</code></td></tr>
+        <tr><td class="td-feature">Search</td><td>Debounced real-time search with pagination</td><td><code class="inline">/search</code></td></tr>
+        <tr><td class="td-feature">Browse</td><td>Now Playing / Popular / Upcoming tabs</td><td><code class="inline">/browse</code></td></tr>
+        <tr><td class="td-feature">Genres</td><td>Color-coded genre cards + sortable film grid</td><td><code class="inline">/genres/:id</code></td></tr>
+        <tr><td class="td-feature">Top Rated</td><td>All-time TMDB community rankings</td><td><code class="inline">/top-rated</code></td></tr>
+        <tr><td class="td-feature">Watchlist</td><td>Persistent localStorage watchlist with full management</td><td><code class="inline">/watchlist</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── STEP 1: API KEY ──────────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div class="step-num">01</div>
+      <div>
+        <div class="step-title">Get Your TMDB API Key</div>
+        <div class="step-sub">Free · Takes 2 minutes</div>
+      </div>
+    </div>
+
+    <p>CineSearch uses The Movie Database (TMDB) API, which is completely free for personal projects.</p>
+
+    <div class="card card-accent">
+      <div class="card-title accent">🔑 Step-by-step API Key Setup</div>
+      <ul class="checklist">
+        <li>
+          <div class="check">1</div>
+          <div>Go to <a href="https://www.themoviedb.org/signup" target="_blank">themoviedb.org/signup</a> and create a free account</div>
+        </li>
+        <li>
+          <div class="check">2</div>
+          <div>Navigate to <strong>Settings → API</strong> in your account dashboard</div>
+        </li>
+        <li>
+          <div class="check">3</div>
+          <div>Click <strong>"Create"</strong> and choose <strong>"Developer"</strong> for the type</div>
+        </li>
+        <li>
+          <div class="check">4</div>
+          <div>Fill out the form (app name: "CineSearch", use: "Personal Project") and submit</div>
+        </li>
+        <li>
+          <div class="check">5</div>
+          <div>Copy your <strong>API Key (v3 auth)</strong> — it looks like: <code class="inline">a1b2c3d4e5f6...</code></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── STEP 2: LOCAL SETUP ──────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div class="step-num">02</div>
+      <div>
+        <div class="step-title">Local Development Setup</div>
+        <div class="step-sub">Prerequisites: Node.js 16+ and npm</div>
+      </div>
+    </div>
+
+    <h3>Install Dependencies</h3>
+    <pre data-label="Terminal"><code><span class="comment"># Navigate to the cinesearch folder</span>
+<span class="cmd">cd</span> cinesearch
+
+<span class="comment"># Install all packages</span>
+<span class="cmd">npm install</span></code></pre>
+
+    <h3>Configure Environment Variables</h3>
+    <p>Copy the example env file and add your API key:</p>
+    <pre data-label="Terminal"><code><span class="cmd">cp</span> .env.example .env</code></pre>
+
+    <p>Then open <code class="inline">.env</code> and replace the placeholder:</p>
+    <pre data-label=".env"><code><span class="key">REACT_APP_TMDB_API_KEY</span>=<span class="val">your_actual_api_key_here</span></code></pre>
+
+    <div class="notice notice-warn">
+      <span class="notice-icon">⚠️</span>
+      <div><strong>Never commit your .env file.</strong> It's already in .gitignore, but double-check before pushing to GitHub. Your API key must start with <code class="inline">REACT_APP_</code> for Create React App to expose it to the browser.</div>
+    </div>
+
+    <h3>Start the Development Server</h3>
+    <pre data-label="Terminal"><code><span class="cmd">npm start</span></code></pre>
+
+    <div class="notice notice-success">
+      <span class="notice-icon">✅</span>
+      <div>The app opens at <strong>http://localhost:3000</strong>. Hot reloading is enabled — changes appear instantly.</div>
+    </div>
+
+    <h3>Project File Structure</h3>
+    <div class="tree">
+      <div><span class="tree-dir">cinesearch/</span></div>
+      <div>├── <span class="tree-dir">public/</span></div>
+      <div>│   └── <span class="tree-file">index.html</span>         <span class="tree-comment"># Google Fonts loaded here</span></div>
+      <div>├── <span class="tree-dir">src/</span></div>
+      <div>│   ├── <span class="tree-dir">components/</span></div>
+      <div>│   │   ├── <span class="tree-file">Navbar.js</span>         <span class="tree-comment"># Fixed nav with search</span></div>
+      <div>│   │   ├── <span class="tree-file">Hero.js</span>           <span class="tree-comment"># Auto-rotating hero</span></div>
+      <div>│   │   ├── <span class="tree-file">MovieCard.js</span>      <span class="tree-comment"># Reusable card + bookmark</span></div>
+      <div>│   │   ├── <span class="tree-file">MovieGrid.js</span>      <span class="tree-comment"># Grid + skeleton loader</span></div>
+      <div>│   │   ├── <span class="tree-file">Section.js</span>        <span class="tree-comment"># Horizontal scroll row</span></div>
+      <div>│   │   └── <span class="tree-file">Footer.js</span></div>
+      <div>│   ├── <span class="tree-dir">context/</span></div>
+      <div>│   │   └── <span class="tree-accent">WatchlistContext.js</span> <span class="tree-comment"># Global watchlist state</span></div>
+      <div>│   ├── <span class="tree-dir">hooks/</span></div>
+      <div>│   │   └── <span class="tree-file">index.js</span>          <span class="tree-comment"># useFetch, useDebounce...</span></div>
+      <div>│   ├── <span class="tree-dir">pages/</span></div>
+      <div>│   │   ├── <span class="tree-file">Home.js</span></div>
+      <div>│   │   ├── <span class="tree-file">MovieDetail.js</span></div>
+      <div>│   │   ├── <span class="tree-file">Search.js</span></div>
+      <div>│   │   ├── <span class="tree-file">Browse.js</span></div>
+      <div>│   │   ├── <span class="tree-file">Genres.js</span></div>
+      <div>│   │   ├── <span class="tree-file">TopRated.js</span></div>
+      <div>│   │   └── <span class="tree-file">Watchlist.js</span></div>
+      <div>│   ├── <span class="tree-dir">styles/</span></div>
+      <div>│   │   └── <span class="tree-accent">GlobalStyle.js</span>    <span class="tree-comment"># CSS variables + resets</span></div>
+      <div>│   ├── <span class="tree-dir">utils/</span></div>
+      <div>│   │   └── <span class="tree-accent">tmdb.js</span>           <span class="tree-comment"># All API calls + helpers</span></div>
+      <div>│   ├── <span class="tree-file">App.js</span>              <span class="tree-comment"># Router + providers</span></div>
+      <div>│   └── <span class="tree-file">index.js</span>            <span class="tree-comment"># Entry point</span></div>
+      <div>├── <span class="tree-accent">.env</span>                  <span class="tree-comment"># Your API key (never commit!)</span></div>
+      <div>├── <span class="tree-file">.env.example</span></div>
+      <div>├── <span class="tree-file">.gitignore</span></div>
+      <div>└── <span class="tree-file">package.json</span></div>
+    </div>
+  </div>
+
+  <!-- ─── STEP 3: GITHUB ───────────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div class="step-num">03</div>
+      <div>
+        <div class="step-title">Push to GitHub</div>
+        <div class="step-sub">Required for Vercel deployment</div>
+      </div>
+    </div>
+
+    <p>Vercel deploys directly from a GitHub repository. Create a new repo and push your code:</p>
+
+    <pre data-label="Terminal"><code><span class="comment"># Initialize git (if not already done)</span>
+<span class="cmd">git init</span>
+<span class="cmd">git add</span> .
+<span class="cmd">git commit</span> -m <span class="str">"Initial commit: CineSearch app"</span>
+
+<span class="comment"># Create a new repo on github.com, then:</span>
+<span class="cmd">git remote add</span> origin https://github.com/<span class="accent-code">your-username</span>/cinesearch.git
+<span class="cmd">git branch</span> -M main
+<span class="cmd">git push</span> -u origin main</code></pre>
+
+    <div class="notice notice-warn">
+      <span class="notice-icon">🔒</span>
+      <div>Before pushing, confirm <code class="inline">.env</code> appears in your <code class="inline">.gitignore</code>. Run <code class="inline">git status</code> — if <code class="inline">.env</code> shows up as a tracked file, run <code class="inline">git rm --cached .env</code> first.</div>
+    </div>
+  </div>
+
+  <!-- ─── STEP 4: VERCEL ───────────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div class="step-num">04</div>
+      <div>
+        <div class="step-title">Deploy on Vercel</div>
+        <div class="step-sub">Free tier · Automatic HTTPS · CI/CD</div>
+      </div>
+    </div>
+
+    <div class="card card-green">
+      <div class="card-title green">🚀 Deployment Steps</div>
+      <ul class="checklist">
+        <li>
+          <div class="check">1</div>
+          <div>Go to <a href="https://vercel.com" target="_blank">vercel.com</a> and sign up / log in with your GitHub account</div>
+        </li>
+        <li>
+          <div class="check">2</div>
+          <div>Click <strong>"Add New → Project"</strong> and import your <strong>cinesearch</strong> repository</div>
+        </li>
+        <li>
+          <div class="check">3</div>
+          <div>Vercel auto-detects Create React App. Leave framework preset as <strong>"Create React App"</strong></div>
+        </li>
+        <li>
+          <div class="check">4</div>
+          <div>Expand <strong>"Environment Variables"</strong> and add your key:</div>
+        </li>
+      </ul>
+    </div>
+
+    <h3>Add Environment Variable in Vercel Dashboard</h3>
+    <pre data-label="Vercel Environment Variables"><code><span class="key">Name:</span>   <span class="val">REACT_APP_TMDB_API_KEY</span>
+<span class="key">Value:</span>  <span class="val">your_actual_tmdb_api_key</span>
+<span class="key">Environment:</span> <span class="accent-code">Production, Preview, Development</span></code></pre>
+
+    <div class="card">
+      <div class="card-title">Build Settings (auto-detected — no changes needed)</div>
+      <pre style="margin:0;border:none;padding:0;background:none;"><code><span class="key">Framework Preset:</span>  <span class="val">Create React App</span>
+<span class="key">Build Command:</span>     <span class="val">npm run build</span>
+<span class="key">Output Directory:</span>  <span class="val">build</span>
+<span class="key">Install Command:</span>   <span class="val">npm install</span></code></pre>
+    </div>
+
+    <p>Click <strong>Deploy</strong>. Vercel will build and deploy your app. In ~2 minutes you'll get a live URL like:</p>
+    <pre data-label="Your live URL"><code>https://cinesearch-<span class="accent-code">yourname</span>.vercel.app</code></pre>
+
+    <div class="notice notice-success">
+      <span class="notice-icon">✅</span>
+      <div><strong>Every git push to main automatically redeploys.</strong> Vercel watches your repo and triggers a new build on every push. Pull request previews also get their own unique URL.</div>
+    </div>
+  </div>
+
+  <!-- ─── STEP 5: CUSTOM DOMAIN ────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div class="step-num">05</div>
+      <div>
+        <div class="step-title">Custom Domain (Optional)</div>
+        <div class="step-sub">Point your own domain to Vercel</div>
+      </div>
+    </div>
+
+    <p>To use a custom domain like <code class="inline">cinesearch.com</code>:</p>
+
+    <ul class="checklist">
+      <li>
+        <div class="check">1</div>
+        <div>In Vercel dashboard → your project → <strong>Settings → Domains</strong></div>
+      </li>
+      <li>
+        <div class="check">2</div>
+        <div>Add your domain name and follow the DNS configuration instructions</div>
+      </li>
+      <li>
+        <div class="check">3</div>
+        <div>Add a <strong>CNAME record</strong> pointing to <code class="inline">cname.vercel-dns.com</code> in your DNS provider</div>
+      </li>
+      <li>
+        <div class="check">4</div>
+        <div>Vercel automatically provisions a <strong>free SSL certificate</strong> via Let's Encrypt</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ─── CUSTOMIZATION ────────────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div style="width:36px;height:36px;border-radius:4px;background:var(--bg-elevated);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🎨</div>
+      <div>
+        <div class="step-title" style="font-size:1.3rem;">Customization Guide</div>
+        <div class="step-sub">Make it your own</div>
+      </div>
+    </div>
+
+    <h3>Change the Color Scheme</h3>
+    <p>All colors are CSS variables defined in <code class="inline">src/styles/GlobalStyle.js</code>:</p>
+    <pre data-label="GlobalStyle.js"><code><span class="comment">// Swap --accent to change the entire app's highlight color</span>
+<span class="key">--accent</span>: <span class="str">#e8c547</span>;    <span class="comment">/* Gold → try #e84888 for pink */</span>
+<span class="key">--bg</span>: <span class="str">#0a0a0f</span>;         <span class="comment">/* Dark bg → try #f5f5f0 for light mode */</span>
+<span class="key">--bg-card</span>: <span class="str">#111118</span>;   <span class="comment">/* Card bg */</span></code></pre>
+
+    <h3>Add New API Endpoints</h3>
+    <p>All TMDB calls live in <code class="inline">src/utils/tmdb.js</code>. Add new functions following this pattern:</p>
+    <pre data-label="src/utils/tmdb.js"><code><span class="comment">// Example: Fetch movies by decade</span>
+export const <span class="accent-code">getMoviesByDecade</span> = (decade, page = 1) =>
+  fetcher(buildUrl(<span class="str">'/discover/movie'</span>, {
+    <span class="key">primary_release_date.gte</span>: <span class="str">`${decade}-01-01`</span>,
+    <span class="key">primary_release_date.lte</span>: <span class="str">`${decade + 9}-12-31`</span>,
+    page,
+    <span class="key">sort_by</span>: <span class="str">'popularity.desc'</span>,
+  }));</code></pre>
+
+    <h3>Extend the Watchlist</h3>
+    <p>The watchlist uses React Context + localStorage. To add features like ratings or notes, update <code class="inline">src/context/WatchlistContext.js</code>:</p>
+    <pre data-label="WatchlistContext.js"><code><span class="comment">// Add a user rating when saving</span>
+const <span class="accent-code">addWithRating</span> = (movie, rating) => {
+  setWatchlist(prev => [
+    { ...movie, userRating: rating, addedAt: Date.now() },
+    ...prev.filter(m => m.id !== movie.id)
+  ]);
+};</code></pre>
+  </div>
+
+  <!-- ─── TROUBLESHOOTING ───────────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div style="width:36px;height:36px;border-radius:4px;background:var(--bg-elevated);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🔧</div>
+      <div>
+        <div class="step-title" style="font-size:1.3rem;">Troubleshooting</div>
+        <div class="step-sub">Common issues &amp; fixes</div>
+      </div>
+    </div>
+
+    <div class="card card-red" style="margin-bottom:1rem;">
+      <div class="card-title red">❌ "Invalid API key" error / blank app</div>
+      <p style="margin:0;font-size:0.85rem;color:var(--text-secondary);">
+        Your <code class="inline">REACT_APP_TMDB_API_KEY</code> is missing or wrong.
+        Check that your <code class="inline">.env</code> file exists at the project root (same level as package.json),
+        the variable name starts with <code class="inline">REACT_APP_</code>, and restart the dev server after any .env changes.
+      </p>
+    </div>
+
+    <div class="card card-red" style="margin-bottom:1rem;">
+      <div class="card-title red">❌ "Cannot GET /movie/123" on refresh (Vercel)</div>
+      <p style="margin:0;font-size:0.85rem;color:var(--text-secondary);">
+        Create a <code class="inline">vercel.json</code> file at the project root to handle client-side routing:
+      </p>
+      <pre style="margin-top:0.75rem;margin-bottom:0;"><code>{
+  <span class="key">"rewrites"</span>: [{ <span class="key">"source"</span>: <span class="str">"/(.*)"</span>, <span class="key">"destination"</span>: <span class="str">"/"</span> }]
+}</code></pre>
+    </div>
+
+    <div class="card card-red" style="margin-bottom:1rem;">
+      <div class="card-title red">❌ Environment variable not working in production</div>
+      <p style="margin:0;font-size:0.85rem;color:var(--text-secondary);">
+        After adding/changing environment variables in the Vercel dashboard, you must
+        <strong>redeploy</strong> the project. Go to Deployments → click the three dots on the latest build → Redeploy.
+      </p>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="card-title">💡 Images not loading</div>
+      <p style="margin:0;font-size:0.85rem;color:var(--text-secondary);">
+        TMDB images are served from <code class="inline">image.tmdb.org</code>.
+        If images fail, your network may be blocking the CDN, or the movie simply has no poster (the app handles this gracefully with a placeholder).
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── COMMANDS REFERENCE ───────────────────────────────── -->
+  <div class="step-section">
+    <div class="step-header">
+      <div style="width:36px;height:36px;border-radius:4px;background:var(--bg-elevated);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">📋</div>
+      <div>
+        <div class="step-title" style="font-size:1.3rem;">Quick Command Reference</div>
+      </div>
+    </div>
+
+    <pre data-label="npm scripts"><code><span class="cmd">npm start</span>           <span class="comment"># Start local dev server (localhost:3000)</span>
+<span class="cmd">npm run build</span>       <span class="comment"># Build production bundle → ./build/</span>
+<span class="cmd">npm test</span>            <span class="comment"># Run test suite</span>
+
+<span class="comment"># Install a new dependency</span>
+<span class="cmd">npm install</span> package-name
+
+<span class="comment"># Check for outdated packages</span>
+<span class="cmd">npm outdated</span>
+
+<span class="comment"># Update all packages</span>
+<span class="cmd">npm update</span></code></pre>
+  </div>
+
+  <hr>
+
+  <p style="text-align:center;font-size:0.8rem;color:var(--text-muted);padding-bottom:1rem;">
+    CineSearch · Built with React + TMDB API ·
+    <a href="https://www.themoviedb.org" target="_blank">TMDB</a> ·
+    <a href="https://vercel.com" target="_blank">Vercel</a>
+  </p>
+
+</div>
+</body>
+</html>
