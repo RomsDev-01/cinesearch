@@ -1,4 +1,4 @@
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { MovieGrid, LoadingGrid } from '../components/MovieGrid';
@@ -140,7 +140,6 @@ const SORTS = [
 
 const Genres = () => {
   const { id: genreIdParam } = useParams();
-  const navigate = useNavigate();
   const { data: genresData } = useFetch(() => getGenres(), []);
   const genres = genresData?.genres || [];
 
